@@ -1,0 +1,19 @@
+name = Codemirror for CKEditor
+description = Plugin codemirror for ckeditor
+package = User interface
+version = BACKDROP_VERSION
+backdrop = 1.x
+type = module
+configure = admin/config/content/formats
+
+
+; optional
+dependencies[] = ckeditor
+version = "0.1"
+
+;stylesheets[all][] = node.css
+;scripts[] = somescript.js
+
+
+
+

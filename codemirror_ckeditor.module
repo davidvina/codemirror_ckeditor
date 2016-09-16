@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Short file description here.
+ *
+ * Long description here.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+/*
+function codemirror_ckeditor_menu() {
+
+  $items = array();
+
+  //configuration page
+  $items['admin/config/system/hdcvi'] = array(
+    'title' => 'Administration HDCVI products',
+    'description' => 'Page for config inported prodcts',
+    'page callback' => 'backdrop_get_form',
+    //    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hdcvi_products_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'hdcvi_products.admin.inc'
+    //'type' => MENU_NORMAL_ITEM,
+   );
+
+
+  //configuration 2
+  $items['admin/config/system/hdcvi/import'] = array(
+    'title' => 'Import HDCVI products',
+    'description' => 'Page for config inported prodcts',
+    'page callback' => 'backdrop_get_form',
+    //    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hdcvi_products_import_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'hdcvi_products.import.inc'
+    //'type' => MENU_NORMAL_ITEM,
+   );
+
+
+  return $items;
+}
+
+*/
+
+
+/**
+ * Implements hook_ckeditor_plugins().
+
+Each plugin for CKEditor must provide an array of properties containing information about the plugin. At minimum, plugins must provide a path and file location so that CKEditor may add the plugin. Available properties for each plugin include:
+
+    location: Required for all external plugins. String path to the plugin directory relative to the Backdrop installation root. Do not include a trailing slash.
+    file: Required for all external plugins. String file name of the plugin in the "location" directory.
+    internal: Boolean value indicating if the plugin is part of the compressed CKEditor library package and already loaded on all instances. If TRUE, the "location" and "file" properties are not needed.
+    css: An array of CSS files that should be added by CKEditor. These files are used only when CKEditor is using an iframe wrapper around its content. If a plugin needs to include CSS for inline and iframe versions, it should add its CSS via CKEditor's JavaScript CKEDITOR.addCss() method.
+    enabled callback: String containing a function name that can determine if this plugin should be enabled based on the current editor configuration. See the hook_ckeditor_PLUGIN_plugin_check() function for an example.
+    buttons: An array of buttons that are provided by this plugin. Each button should by keyed by its CKEditor button name, and should contain an array of button properties, including:
+
+        label: A human-readable, translated button name.
+        image: An image for the button to be used in the toolbar.
+        image_rtl: If the image needs to have a right-to-left version, specify an alternative file that will be used in RTL editors.
+        image_alternative: If this button does not render as an image, specify an HTML string representing the contents of this button. This alternative will only be used in the administrative section for assembling the toolbar.
+        attributes: An array of HTML attributes which should be added to this button when rendering the button in the administrative section for assembling the toolbar.
+        multiple: Boolean value indicating if this button may be added multiple times to the toolbar. This typically is only applicable for dividers and group indicators.
+        required_html: If this button requires certain HTML tags or attributes to be allowed, specify an nested array for each set of tags that should be allowed. For example:
+
+    array(
+      array(
+        'tags' => array('a'),
+        'attributes' => array('href', 'alt'),
+        'styles' => array('color', 'text-decoration'),
+        'classes' => array('external', 'internal'),
+      ),
+    );
+
+  Note that this must be a nested array, to allow for the button to require different attributes on different tags.
+
+    optional_html: If this button can work with or without certain tags or attributes in a reduced manner, then specify additional values that can be used to provide the full functionality. This should match the same format as the "required_html" return value.
+
+Return value
+
+array An array of plugin definitions, keyed by the plugin name.
+ */
+
+function codemirror_ckeditor_ckeditor_plugins() {
+  $plugins['codemirror'] = array(
+    'path' => backdrop_get_path('module', 'codemirror_ckeditor') . '/js/plugins/codemirror',
+    'file' => 'plugin.js',
+    'css' => array(backdrop_get_path('module', 'codemirror_ckeditor') . '/js/plugins/codemirror/css/codemirror.min.css'),
+    
+    'enabled callback' => 'codemirror_ckeditor_codemirror_plugin_check',
+    /*
+    'required_html' => array(
+      array(
+        'tags' => array('a'),
+        'attributes' => array('href', 'alt'),
+        'styles' => array('color', 'text-decoration'),
+        'classes' => array('external', 'internal'),
+      ),
+    ),*/
+  );
+
+  dpm($plugins);
+
+  return $plugins;
+}
+
+
+/**
+ * Implements hook_ckeditor_PLUGIN_plugin_check
+
+ Note: This is not really a hook. The function name is manually specified via 'enabled callback' in hook_ckeditor_plugins(), with this recommended callback name pattern. It is called from ckeditor_add_settings().
+
+This callback should determine if a plugin should be enabled for a CKEditor instance. Plugins may be enabled based off an explicit setting, or enable themselves based on the configuration of another setting, such as enabling based on a particular button being present in the toolbar.
+
+Parameters
+
+object $format: An format object as returned by filter_format_load(). The editor's settings may be found in $format->editor_settings.
+
+string $plugin_name: String name of the plugin that is being checked.
+Return value
+
+boolean Boolean TRUE if the plugin should be enabled, FALSE otherwise. 
+ */
+
+
+function codemirror_ckeditor_codemirror_plugin_check($format, $plugin_name) {
+  // Automatically enable this plugin if the Underline button is enabled.
+  
+  foreach ($format->editor_settings['toolbar'][0] as $row) {
+
+    if (in_array('Source', $row['items'])) {
+      dpm('hola');
+      return TRUE;
+    }
+
+  }
+
+}

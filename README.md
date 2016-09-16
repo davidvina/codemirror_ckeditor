@@ -1,15 +1,30 @@
-Custom Module
-=============
+Codemirror for ckeditor module
+=============================
 
-This is an empty boilerplate for custom Drupal 7 modules.
+Codemirror for ckeditror allow you to use syntax highlighting on ckeditor html mode.
 
-Code available at:
+References
+----------
 
-* https://github.com/pereorga/drupal-module-boilerplate
-* https://drupal.org/sandbox/netol/drupal_module_boilerplate
+- https://codemirror.net/
+- http://ckeditor.com/
+- http://ckeditor.com/addon/codemirror
 
 
-Author
-======
+Installation
+------------
 
-Your Name <name@example.com>
+- Install this module using the official Backdrop CMS instructions at
+  https://backdropcms.org/guide/modules
+
+License
+-------
+
+This project is GPL v2 software. See the LICENSE.txt file in this directory for
+complete text
+
+
+Current Maintainers
+-------------------
+
+- David Vinagre (https://github.com/davidvina/)

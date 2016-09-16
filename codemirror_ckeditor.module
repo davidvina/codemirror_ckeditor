@@ -47,6 +47,58 @@ function codemirror_ckeditor_menu() {
 */
 
 
+/*
+function codemirror_ckeditor_form_filter_admin_format_form_alter(&$form, &$form_state, $form_id) {
+  dpm($form_id);
+  dpm($form);
+  dpm($form_state);
+}*/
+
+function codemirror_ckeditor_form_ckeditor_settings_form_alter(&$form, &$form_state, $form_id) {
+  dpm($form_id);
+  dpm($form);
+  dpm($form_state);
+  dpm('hola');
+}
+
+
+/**
+ * Modify the list of available CKEditor plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see hook_ckeditor_plugins()
+ */
+function codemirror_ckeditor_ckeditor_plugins_alter(&$plugins) {
+  //dpm($plugins);
+}
+
+
+
+/**
+ * Modify the raw CKEditor settings passed to the editor.
+ *
+ * This hook can be useful if you have created a CKEditor plugin that needs
+ * additional settings passed to it from Backdrop. In particular, because
+ * CKEditor loads JavaScript files directly, use of Backdrop.t() in these
+ * plugins will not work. You may use this hook to provide translated strings
+ * for your plugin.
+ *
+ * @param array $settings
+ *   The array of settings that will be passed to CKEditor.
+ * @param $format
+ *   The filter format object containing this editor's settings.
+ */
+function codemirror_ckeditor_ckeditor_settings_alter(&$settings, $format) {
+  dpm($settings);
+  dpm($format);
+}
+
+
 /**
  * Implements hook_ckeditor_plugins().
 
@@ -86,24 +138,57 @@ array An array of plugin definitions, keyed by the plugin name.
  */
 
 function codemirror_ckeditor_ckeditor_plugins() {
+
+  global $base_url;
+
+  $image_prefix = $base_url . "/" . backdrop_get_path('module', 'codemirror_ckeditor') . '/js/plugins/codemirror/icons/';  
+
   $plugins['codemirror'] = array(
     'path' => backdrop_get_path('module', 'codemirror_ckeditor') . '/js/plugins/codemirror',
+    
     'file' => 'plugin.js',
+    
     'css' => array(backdrop_get_path('module', 'codemirror_ckeditor') . '/js/plugins/codemirror/css/codemirror.min.css'),
     
     'enabled callback' => 'codemirror_ckeditor_codemirror_plugin_check',
-    /*
-    'required_html' => array(
-      array(
-        'tags' => array('a'),
-        'attributes' => array('href', 'alt'),
-        'styles' => array('color', 'text-decoration'),
-        'classes' => array('external', 'internal'),
-      ),
-    ),*/
+
+    'buttons' => array(
+        'AutoComplete' => array(
+          'label' => t('Autocomplete'),
+          'image' => $image_prefix . 'autocomplete.png',
+          'image_alternative' => t('Autocomplete'),
+        ),
+        /*
+        'AutoFormat' => array(
+          'label' => t('Autoformat'),
+          'image' => $image_prefix . 'autoformat.png',
+          'image_alternative' => t('Autoformat'),
+        ),
+        'Comment' => array(
+          'label' => t('Comment'),
+          'image' => $image_prefix . 'commentselectedrange.png',
+          'image_alternative' => t('Comment'),
+        ),
+        'UnComment' => array(
+          'label' => t('Uncomment'),
+          'image' => $image_prefix . 'uncommentselectedrange.png',
+          'image_alternative' => t('Uncomment'),
+        ),
+        'SearchCode' => array(
+          'label' => t('Search code'),
+          'image' => $image_prefix . 'searchcode.png',
+          'image_alternative' => t('Search code'),
+        ),*/
+    ),
+
+    'internal' => FALSE,
+
   );
 
+  /*
   dpm($plugins);
+  dpm($base_url);
+  */
 
   return $plugins;
 }
@@ -128,12 +213,11 @@ boolean Boolean TRUE if the plugin should be enabled, FALSE otherwise.
 
 
 function codemirror_ckeditor_codemirror_plugin_check($format, $plugin_name) {
-  // Automatically enable this plugin if the Underline button is enabled.
-  
+
+  // Automatically enable this plugin if the Source button is enabled.
   foreach ($format->editor_settings['toolbar'][0] as $row) {
 
     if (in_array('Source', $row['items'])) {
-      dpm('hola');
       return TRUE;
     }
 
